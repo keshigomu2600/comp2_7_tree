@@ -10,11 +10,51 @@ void initialize(binary_tree* t)
 	t->root = NULL;
 }
 
+void free_recursive(node* p)
+{
+	if (p == NULL) return;
+
+	//再帰的に
+	free_recursive(p->left);
+	free_recursive(p->right);
+
+	free(p);
+}
+
 //
 // 使用メモリの全解放
 //
 void finalize(binary_tree* t)
 {
+	free_recursive(t->root);
+}
+
+static void insert_node(node* p, node* n)
+{
+	if (n->key < p->key)
+	{
+		//左に追加
+		if (p->left == NULL)
+		{
+			p->left = n;
+		}
+		else
+		{
+			insert_node(p->left, n);
+		}
+	}
+	else 
+	{
+		//右に追加
+		if (p->right == NULL)
+		{
+			p->right = n;
+		}
+		else
+		{
+			insert_node(p->right, n);
+		}
+	}
 }
 
 //
@@ -22,17 +62,43 @@ void finalize(binary_tree* t)
 //
 bool add_node(binary_tree* t, int key, const char* value)
 {
-	// todo: ノードを作成して、適切な位置に挿入してください
+	node* p = malloc(sizeof(node));
+	if (p == NULL)
+	{
+		return false;
+	}
+
+	p->key = key;
+	strcpy_s(p->value,256, value);
+	p->right = p->left = NULL;
+
+	if (t->root == NULL)
+	{
+		t->root = p;
+	}
+	else {
+		insert_node(t->root, p);
+	}
 
 	return true;
 }
 
-//
-// keyの小さな順にコールバック関数funcを呼び出す
-//
-void serach(const binary_tree* t, void (*func)(const node* p))
+static void search_nodes(const node *p,void (*func)(const node* p))
 {
-	// todo: keyの小さな順にfunc関数をよびだしてください
-	func(t->root);// テストが通ってしまっていたので、通らなくした
+	if (p == NULL) {
+		return;
+	}
+
+	search_nodes(p->left, func);
+	func(p);
+	search_nodes(p->right, func);
+}
+
+//
+//keyの小さな順にコールバック関数funcを呼び出す
+//
+void serach(const binary_tree* t, void(*func)(const node* p))
+{
+	search_nodes(t->root, func);
 }
 

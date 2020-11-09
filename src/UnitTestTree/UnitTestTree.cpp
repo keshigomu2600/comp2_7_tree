@@ -33,9 +33,9 @@ namespace UnitTestTree
 			binary_tree tree;
 			initialize(&tree);
 
-			add_node(&tree, 1, "hello world!");
+			add_node(&tree, 1, "hello world!"); //ƒm[ƒh‚ðì‚Á‚Ä”Ô†1”Ô‚Å’Ç‰Á
 
-			Assert::AreEqual("hello world!", tree.root->value);
+			Assert::AreEqual("hello world!", tree.root->value); //’Ç‰Á‚µ‚½‚à‚Ì‚ª“ü‚Á‚Ä‚¢‚é
 
 			finalize(&tree);
 
